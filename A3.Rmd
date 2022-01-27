@@ -1,0 +1,71 @@
+---
+title: "ReproAssignment"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Reproducibility Assignment
+[Github - jaydealexandra](https://github.com/jaydealexandra)  
+Jayde MacMillan  
+20068250  
+
+### Project Info  
+1/26/2022 
+
+[Reproducibility Assignment](https://github.com/jaydealexandra/ReproAssignment.git)  
+  
+  
+### Loads Data  
+Loads the dplyr package into memory.
+```{r}
+library(dplyr)
+```
+
+Creates a dataframe called `fallo` using "FallopiaData.csv".
+```{r}
+fallo <- read.csv("~/BIOL 432/Projects/ReproAssignment/InputData/FallopiaData.csv")
+```
+  
+### Manipulations and Calculations
+  
+Filters the dataframe `fallo` to include: biomass over 60, a new column titled 'TotalG' that contains the biomass in grams along with Taxon, Scenario, and Nutrients.
+```{r}
+fallo <- fallo %>%
+  filter(Total>60) %>%
+  transmute(TotalG = Total / 1000, Taxon, Scenario, Nutrients) 
+```
+  
+Creates a custom function named `calcVector` that takes two parameters from the user and runs calculations based on the calculation type.
+```{r}
+calcVector <- function(dataToProcess, calcType){
+  if (calcType == "Average"){
+    print(mean(dataToProcess))
+  } else if (calcType == "Sum"){
+    print(sum(dataToProcess))
+  } else if (calcType == "Observations"){
+    print(length(dataToProcess))
+  } else {
+    print("Error: Invaild Calculation Type")
+  }  
+}
+```
+
+Uses `calcVector` to output the total number of observations in the Taxon column.
+```{r}
+calcVector(fallo$Taxon, "Observations")
+```
+
+Uses `calcVector` to output the average total grams for high and low nutrient conditions.
+```{r}
+calcVector(filter(fallo, Nutrients == "high")$TotalG, "Average")
+
+calcVector(filter(fallo, Nutrients == "low")$TotalG, "Average")
+```
+
+Saves the formatted `fallo` data to "./Output/WrangledData.csv".
+```{r}
+write.csv(fallo, "./Output/WrangledData.csv")
+```
+  
+  
