@@ -1,0 +1,36 @@
+---
+title: "Regex.Rmd"
+output: html_document
+---
+ 
+## R-egex Assignment  
+Jayde MacMillan  
+20068250  
+[Github jaydealexandra](https://github.com/jaydealexandra)  
+
+#### Part I: Data Science  
+
+Loads the dplyr package into memory 
+```{r}
+library(dplyr)
+```
+
+Imports 'measurements.csv' into an object called 'MData'
+```{r}
+MData <- read.csv("measurements.csv")
+```
+
+Adds new column called 'Sp' that shortens the genus name in the Organism column to only the first letter and period
+```{r}
+MDataSp <- mutate(MData, Sp = tools::toTitleCase(sub("(\\w)\\w+", "\\1", sub("\\s",". ", Organism))))
+```
+
+Creates a new dataset called 'MeasShort' that includes only the columns Sp, limb width, limb length, and observer
+```{r}
+MeasShort <- select(MDataSp, Sp, Limb.width:Observer)
+```
+
+Saves 'MeasShort' as a file called 'MeasShort.csv'
+```{r}
+write.csv(MeasShort, 'MeasShort.csv')
+```
